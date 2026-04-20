@@ -36,7 +36,6 @@ export const categories: CategoryInfo[] = [
   { id: "books", name: "Books", icon: "📚", color: "from-amber-700 to-yellow-700" },
   { id: "countries", name: "Countries", icon: "🏳️", color: "from-teal-500 to-cyan-500" },
   { id: "crypto", name: "Crypto", icon: "₿", color: "from-orange-500 to-yellow-500" },
-  { id: "dates", name: "Dates & Time", icon: "📅", color: "from-blue-400 to-indigo-400" },
   { id: "finance", name: "Finance", icon: "💰", color: "from-green-600 to-emerald-600" },
   { id: "images", name: "Images", icon: "🖼️", color: "from-pink-400 to-rose-400" },
   { id: "jokes", name: "Jokes & Fun", icon: "😂", color: "from-yellow-400 to-amber-400" },
@@ -51,9 +50,8 @@ export const apis: ApiItem[] = [
   // ═══ ANIMALS ═══
   { id: "cat-fact", name: "Cat Facts", description: "랜덤 고양이 사실", category: "animals", endpoint: "https://catfact.ninja/fact", method: "GET", responseExample: { fact: "Cats have five toes on their front paws.", length: 45 } },
   { id: "dog-image", name: "Random Dog", description: "랜덤 강아지 사진", category: "animals", endpoint: "https://dog.ceo/api/breeds/image/random", method: "GET", responseExample: { message: "https://images.dog.ceo/breeds/...", status: "success" } },
-  { id: "shiba-image", name: "Shiba Inu", description: "랜덤 시바견 사진", category: "animals", endpoint: "https://shibe.online/api/shibes", method: "GET", responseExample: { images: ["https://cdn.shibe.online/shibes/...jpg"] } },
   { id: "fox-image", name: "Random Fox", description: "랜덤 여우 사진", category: "animals", endpoint: "https://randomfox.ca/floof/", method: "GET", responseExample: { image: "https://randomfox.ca/images/1.jpg" } },
-  { id: "duck-image", name: "Random Duck", description: "랜덤 오리 사진", category: "animals", endpoint: "https://random-d.uk/api/random", method: "GET", responseExample: { url: "https://random-d.uk/api/randomimg/1.jpg" } },
+  { id: "duck-image", name: "Random Duck", description: "랜덤 오리 사진", category: "animals", endpoint: "https://random-d.uk/api/random?type=jpg", method: "GET", responseExample: { url: "https://random-d.uk/api/randomimg/1.jpg" } },
   { id: "bored-api", name: "Bored API", description: "할 일 추천", category: "animals", endpoint: "https://bored-api.appbrewery.com/random", method: "GET", responseExample: { activity: "Learn a new language", type: "education", participants: 1 } },
   // ═══ ENTERTAINMENT ═══
   { id: "swapi-people", name: "Star Wars Character", description: "스타워즈 캐릭터", category: "entertainment", endpoint: "https://swapi.dev/api/people/1", method: "GET", responseExample: { name: "Luke Skywalker", height: "172" } },
@@ -72,19 +70,15 @@ export const apis: ApiItem[] = [
   { id: "hangman-word", name: "Hangman Word", description: "행맨 게임 단어", category: "games", endpoint: "https://random-word-api.herokuapp.com/word?number=1", method: "GET", responseExample: ["programming"] },
   // ═══ GEOGRAPHY ═══
   { id: "countries-all", name: "All Countries", description: "전 세계 국가", category: "geography", endpoint: "https://restcountries.com/v3.1/all?fields=name,capital,region,population,flags&limit=10", method: "GET", responseExample: [{ name: { common: "South Korea" }, capital: ["Seoul"] }] },
-  { id: "country-random", name: "Random Country", description: "랜덤 국가 정보", category: "geography", endpoint: "https://restcountries.com/v3.1/random", method: "GET", responseExample: [{ name: { common: "Japan" }, capital: ["Tokyo"] }] },
+  { id: "country-random", name: "Random Country", description: "랜덤 국가 정보", category: "geography", endpoint: "https://restcountries.com/v3.1/all?fields=name,capital,region,population,flags", method: "GET", responseExample: [{ name: { common: "Japan" }, capital: ["Tokyo"] }] },
   { id: "ip-country", name: "IP Geolocation", description: "IP로 국가 조회", category: "geography", endpoint: "https://ipapi.co/json/", method: "GET", responseExample: { ip: "1.1.1.1", city: "Seoul", country_name: "South Korea" } },
-  { id: "university", name: "Universities", description: "국가별 대학교", category: "geography", endpoint: "http://universities.hipolabs.com/search?country=South+Korea&limit=5", method: "GET", responseExample: [{ name: "Seoul National University" }] },
+  { id: "university", name: "Universities", description: "국가별 대학교", category: "geography", endpoint: "http://universities.hipolabs.com/search?country=Korea%2C+Republic+of&limit=5", method: "GET", responseExample: [{ name: "Seoul National University" }] },
   { id: "geodb-cities", name: "City Search", description: "도서 검색", category: "geography", endpoint: "https://geocoding-api.open-meteo.com/v1/search?name=Seoul&count=5", method: "GET", responseExample: { results: [{ name: "Seoul", latitude: 37.57 }] } },
   // ═══ HISTORY ═══
-  { id: "history-today", name: "Today in History", description: "오늘의 역사", category: "history", endpoint: "https://history.muffinlabs.com/date", method: "GET", responseExample: { date: "April 20", events: [{ year: "1889", text: "Adolf Hitler is born." }] } },
-  { id: "history-random", name: "Random History", description: "랜덤 역사 사건", category: "history", endpoint: "https://history.muffinlabs.com/date/random", method: "GET", responseExample: { events: [{ year: "1947", text: "India gains independence." }] } },
+  { id: "history-today", name: "Today in History", description: "오늘의 역사", category: "history", endpoint: "https://history.muffinlabs.com/date", method: "GET", responseExample: { date: "April 20", data: { Events: [{ year: "1889", text: "Adolf Hitler is born." }] } } },
+  { id: "history-random", name: "Random History", description: "랜덤 역사 사건", category: "history", endpoint: "https://history.muffinlabs.com/date/6/15", method: "GET", responseExample: { date: "June 15", data: { Events: [{ year: "1947", text: "India gains independence." }] } } },
   { id: "public-holidays", name: "Public Holidays", description: "공휴일 정보", category: "history", endpoint: "https://date.nager.at/api/v3/PublicHolidays/2024/KR", method: "GET", responseExample: [{ date: "2024-01-01", localName: "신정" }] },
   // ═══ MATH ═══
-  { id: "math-fact", name: "Math Fact", description: "수학 사실", category: "math", endpoint: "http://numbersapi.com/random/math?json", method: "GET", responseExample: { text: "7 is the number of days in a week.", number: 7 } },
-  { id: "math-year", name: "Year Fact", description: "연도 사실", category: "math", endpoint: "http://numbersapi.com/random/year?json", method: "GET", responseExample: { text: "2000 is the year Y2K was feared.", number: 2000 } },
-  { id: "math-date", name: "Date Fact", description: "날짜 사실", category: "math", endpoint: "http://numbersapi.com/random/date?json", method: "GET", responseExample: { text: "February 29 is leap day.", number: 229 } },
-  { id: "number-trivia", name: "Number Trivia", description: "숫자 트리비아", category: "math", endpoint: "http://numbersapi.com/random/trivia?json", method: "GET", responseExample: { text: "42 is the answer to everything.", number: 42 } },
   { id: "pi-digits", name: "Pi Digits", description: "원주율 자릿수", category: "math", endpoint: "https://api.pi.delivery/v1/pi?start=0&numberOfDigits=100", method: "GET", responseExample: { content: "314159265358979..." } },
   // ═══ MUSIC ═══
   { id: "itunes-search", name: "iTunes Search", description: "음악 검색", category: "music", endpoint: "https://itunes.apple.com/search?term=bts&limit=3", method: "GET", responseExample: { results: [{ trackName: "Dynamite", artistName: "BTS" }] } },
@@ -106,7 +100,6 @@ export const apis: ApiItem[] = [
   { id: "nasa-apod", name: "NASA APOD", description: "오늘의 우주 사진", category: "space", endpoint: "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", method: "GET", responseExample: { title: "Galaxy NGC 1300", url: "https://..." } },
   { id: "mars-photos", name: "Mars Rover Photos", description: "화성 탐사선 사진", category: "space", endpoint: "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=DEMO_KEY&per_page=3", method: "GET", responseExample: { photos: [{ img_src: "https://..." }] } },
   { id: "iss-location", name: "ISS Location", description: "국제우주정거장 위치", category: "space", endpoint: "http://api.open-notify.org/iss-now.json", method: "GET", responseExample: { iss_position: { latitude: "37.5", longitude: "127.0" } } },
-  { id: "iss-pass", name: "ISS Pass Times", description: "ISS 통과 시간", category: "space", endpoint: "http://api.open-notify.org/iss-pass.json?lat=37.57&lon=126.98", method: "GET", responseExample: { response: [{ duration: 600, risetime: 1234567890 }] } },
   { id: "people-space", name: "People in Space", description: "우주에 있는 사람 수", category: "space", endpoint: "http://api.open-notify.org/astros.json", method: "GET", responseExample: { number: 10, people: [{ name: "John", craft: "ISS" }] } },
   // ═══ SPORTS ═══
   { id: "f1-drivers", name: "F1 Driver Standings", description: "F1 드라이버 순위", category: "sports", endpoint: "https://ergast.com/api/f1/current/driverStandings.json", method: "GET", responseExample: { MRData: { StandingsTable: { StandingsLists: [] } } } },
@@ -145,12 +138,9 @@ export const apis: ApiItem[] = [
   { id: "coingecko-btc", name: "Bitcoin Price", description: "비트코인 시세", category: "crypto", endpoint: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw,usd&include_24hr_change=true", method: "GET", responseExample: { bitcoin: { krw: 80000000, usd: 60000 } } },
   { id: "coingecko-trending", name: "Trending Coins", description: "트렌딩 코인", category: "crypto", endpoint: "https://api.coingecko.com/api/v3/search/trending", method: "GET", responseExample: { coins: [{ item: { id: "bitcoin", name: "Bitcoin" } }] } },
   { id: "coingecko-markets", name: "Coin Markets", description: "코인 시장", category: "crypto", endpoint: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5", method: "GET", responseExample: [{ id: "bitcoin", current_price: 60000 }] },
-  // ═══ DATES & TIME ═══
-  { id: "worldtime", name: "World Time", description: "전 세계 시간", category: "dates", endpoint: "https://worldtimeapi.org/api/timezone/Asia/Seoul", method: "GET", responseExample: { datetime: "2024-01-01T12:00:00+09:00" } },
-  { id: "worldtime-zones", name: "Time Zones", description: "타임존 목록", category: "dates", endpoint: "https://worldtimeapi.org/api/timezone", method: "GET", responseExample: ["Africa/Abidjan", "Asia/Seoul"] },
   // ═══ FINANCE ═══
   { id: "exchange-rate", name: "Exchange Rate", description: "환율 정보", category: "finance", endpoint: "https://api.exchangerate-api.com/v4/latest/USD", method: "GET", responseExample: { base: "USD", rates: { KRW: 1350, JPY: 150 } } },
-  { id: "exchange-convert", name: "Currency Convert", description: "환율 변환", category: "finance", endpoint: "https://api.exchangerate-api.com/v4/convert?from=USD&to=KRW&amount=100", method: "GET", responseExample: { result: 135000 } },
+  { id: "exchange-convert", name: "Currency Convert", description: "환율 변환 (USD→KRW)", category: "finance", endpoint: "https://api.exchangerate-api.com/v4/latest/USD", method: "GET", responseExample: { base: "USD", rates: { KRW: 1470 } } },
   // ═══ IMAGES ═══
   { id: "dog-breeds", name: "Dog Breeds", description: "강아지 품종 목록", category: "images", endpoint: "https://dog.ceo/api/breeds/list/all", method: "GET", responseExample: { message: { affenpinscher: [] }, status: "success" } },
   { id: "dog-by-breed", name: "Dog by Breed", description: "품종별 강아지", category: "images", endpoint: "https://dog.ceo/api/breed/shiba/images/random", method: "GET", responseExample: { message: "https://images.dog.ceo/breeds/shiba/..." } },
@@ -166,7 +156,7 @@ export const apis: ApiItem[] = [
   { id: "ron-swanson", name: "Ron Swanson", description: "론 스완슨 명언", category: "quotes", endpoint: "https://ron-swanson-quotes.herokuapp.com/v2/quotes", method: "GET", responseExample: [{ quote: "I have a joke about chemistry." }] },
   // ═══ TEXT & LANGUAGE ═══
   { id: "translate", name: "MyMemory Translate", description: "무료 번역", category: "text", endpoint: "https://api.mymemory.translated.net/get?q=Hello&langpair=en|ko", method: "GET", responseExample: { responseData: { translatedText: "안녕하세요" } } },
-  { id: "lorem-ipsum", name: "Lorem Ipsum", description: "더미 텍스트", category: "text", endpoint: "https://dummyjson.com/lorem?length=100", method: "GET", responseExample: { lorem: "Lorem ipsum dolor sit amet..." } },
+  { id: "lorem-ipsum", name: "Lorem Ipsum", description: "더미 텍스트", category: "text", endpoint: "https://baconipsum.com/api/?type=all-meat&sentences=3", method: "GET", responseExample: ["Lorem ipsum dolor sit amet..."] },
   // ═══ TRANSPORT ═══
   { id: "flight-data", name: "Flight Data", description: "비행 데이터", category: "transport", endpoint: "https://opensky-network.org/api/states/all?limit=3", method: "GET", responseExample: { states: [[]], time: 1234567890 } },
   // ═══ USER AGENT ═══
