@@ -9,27 +9,27 @@ interface CategoryGridProps {
 
 export default function CategoryGrid({ active, onChange }: CategoryGridProps) {
   return (
-    <div className="w-full overflow-x-auto scrollbar-hide">
-      <div className="flex gap-2 pb-2 min-w-max">
+    <nav className="w-full overflow-x-auto scrollbar-hide">
+      <div className="flex gap-1 min-w-max">
         {categories.map((cat: CategoryInfo) => (
           <button
             key={cat.id}
             onClick={() => onChange(cat.id)}
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
-              transition-all duration-200 border
+              flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap
+              transition-colors duration-150 border
               ${
                 active === cat.id
-                  ? `bg-gradient-to-r ${cat.color} text-white border-transparent shadow-lg`
-                  : "bg-slate-800/50 text-slate-300 border-slate-700/50 hover:bg-slate-700/50 hover:text-white hover:border-slate-600"
+                  ? "bg-[var(--color-accent-dim)] text-[var(--color-accent)] border-[var(--color-accent)]"
+                  : "text-[var(--color-text-muted)] border-transparent hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
               }
             `}
           >
-            <span>{cat.icon}</span>
+            <span className="text-xs">{cat.icon}</span>
             <span>{cat.name}</span>
           </button>
         ))}
       </div>
-    </div>
+    </nav>
   );
 }

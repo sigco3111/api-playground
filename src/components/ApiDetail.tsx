@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ApiItem, getCategoryById } from "@/data/apis";
 
 interface ApiDetailProps {
@@ -9,6 +9,28 @@ interface ApiDetailProps {
 }
 
 type Tab = "response" | "curl" | "fetch" | "python";
+
+function highlightJson(str: string): string {
+  return str.replace(
+    /("(?:\\.|[^"\\])*")\s*:/g,
+    '<span class="json-key">$1</span>:'
+  ).replace(
+    /:\s*("(?:\\.|[^"\\])*")/g,
+    ': <span class="json-string">$1</span>'
+  ).replace(
+    /:\s*(\d+\.?\d*)/g,
+    ': <span class="json-number">$1</span>'
+  ).replace(
+    /:\s*(true|false)/g,
+    ': <span class="json-boolean">$1</span>'
+  ).replace(
+    /:\s*(null)/g,
+    ': <span class="json-null">$1</span>'
+  ).replace(
+    /([[\]{}])/g,
+    '<span class="json-bracket">$1</span>'
+  );
+}
 
 export default function ApiDetail({ api, onClose }: ApiDetailProps) {
   const [response, setResponse] = useState<string | null>(null);
@@ -38,10 +60,7 @@ export default function ApiDetail({ api, onClose }: ApiDetailProps) {
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
 
       const contentType = res.headers.get("content-type") || "";
-      if (contentType.includes("json") || contentType.includes("javascript")) {
-        const data = await res.json();
-        setResponse(JSON.stringify(data, null, 2));
-      } else if (contentType.includes("image")) {
+      if (contentType.includes("image")) {
         setResponse(`🖼️ Image URL: ${res.url}\n\nContent-Type: ${contentType}`);
       } else {
         const text = await res.text();
@@ -62,169 +81,139 @@ export default function ApiDetail({ api, onClose }: ApiDetailProps) {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1500);
   };
 
-  const curlSnippet = `curl -X ${api.method} "${api.endpoint}"`;
-
-  const fetchSnippet = `fetch("${api.endpoint}")
-  .then(res => res.json())
-  .then(data => console.log(data))
-  .catch(err => console.error(err));`;
-
-  const pythonSnippet = `import requests
-
-response = requests.${api.method.toLowerCase()}("${api.endpoint}")
-data = response.json()
-print(data)`;
-
-  const getSnippet = () => {
-    switch (activeTab) {
-      case "curl": return curlSnippet;
-      case "fetch": return fetchSnippet;
-      case "python": return pythonSnippet;
-      default: return response || "";
-    }
+  const snippets: Record<string, string> = {
+    curl: `curl -X ${api.method} "${api.endpoint}"`,
+    fetch: `fetch("${api.endpoint}")\n  .then(res => res.json())\n  .then(data => console.log(data))\n  .catch(err => console.error(err));`,
+    python: `import requests\n\nresponse = requests.${api.method.toLowerCase()}("${api.endpoint}")\ndata = response.json()\nprint(data)`,
   };
 
-  const tabs: { id: Tab; label: string }[] = [
+  const tabs: { id: Tab; label: string; shortcut?: string }[] = [
     { id: "response", label: "Response" },
     { id: "curl", label: "cURL" },
-    { id: "fetch", label: "Fetch" },
+    { id: "fetch", label: "JS" },
     { id: "python", label: "Python" },
   ];
 
+  const currentContent = activeTab === "response"
+    ? (response || "")
+    : (snippets[activeTab] || "");
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-[2px]" onClick={onClose}>
       <div
-        className="w-full max-w-3xl max-h-[85vh] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        className="w-full max-w-2xl max-h-[80vh] bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg flex flex-col overflow-hidden shadow-2xl shadow-black/50"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-700/50">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border)]">
           <div className="flex items-center gap-3 min-w-0">
-            <span className="text-2xl">{cat?.icon}</span>
+            <span className="text-base">{cat?.icon}</span>
             <div className="min-w-0">
-              <h2 className="text-lg font-bold text-white truncate">{api.name}</h2>
-              <p className="text-sm text-slate-400">{api.description}</p>
+              <h2 className="text-sm font-semibold text-[var(--color-text)]">{api.name}</h2>
+              <p className="text-xs text-[var(--color-text-muted)]">{api.description}</p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="shrink-0 p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <button onClick={onClose} className="shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors p-1">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Endpoint & Send */}
-        <div className="p-5 border-b border-slate-700/50 bg-slate-800/30">
-          <div className="flex items-center gap-2 mb-3">
-            <span
-              className={`px-2.5 py-1 rounded-md text-xs font-bold tracking-wider ${
-                api.method === "GET" ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"
-              }`}
-            >
+        {/* Endpoint bar */}
+        <div className="px-5 py-3 border-b border-[var(--color-border-light)] bg-[var(--color-surface)]">
+          <div className="flex items-center gap-2">
+            <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider ${
+              api.method === "GET" ? "text-[var(--color-accent)]" : "text-[var(--color-warn)]"
+            }`}>
               {api.method}
             </span>
-            <code className="flex-1 text-sm text-slate-300 bg-slate-800 px-3 py-2 rounded-lg overflow-x-auto">
-              {api.endpoint}
-            </code>
+            <code className="flex-1 text-xs text-[var(--color-text-muted)] font-mono truncate">{api.endpoint}</code>
+            <button
+              onClick={callApi}
+              disabled={loading}
+              className="shrink-0 px-4 py-1.5 rounded-md text-xs font-medium text-[var(--color-bg)] bg-[var(--color-accent)] hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
+            >
+              {loading ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                </span>
+              ) : "Send"}
+            </button>
           </div>
-          <button
-            onClick={callApi}
-            disabled={loading}
-            className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                요청 중...
-              </>
-            ) : (
-              <>🚀 Send Request</>
-            )}
-          </button>
         </div>
 
-        {/* Tabs & Response */}
-        <div className="flex-1 overflow-hidden flex flex-col">
-          <div className="flex items-center gap-1 px-5 pt-4 border-b border-slate-700/50">
-            {tabs.map((tab) => (
+        {/* Tabs */}
+        <div className="flex items-center gap-0 px-5 border-b border-[var(--color-border-light)]">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-3 py-2.5 text-xs font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.id
+                  ? "text-[var(--color-text)] border-[var(--color-accent)]"
+                  : "text-[var(--color-text-muted)] border-transparent hover:text-[var(--color-text)]"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+          {responseTime > 0 && activeTab === "response" && (
+            <span className="ml-auto text-[11px] font-mono text-[var(--color-text-muted)]">{responseTime}ms</span>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-auto p-5 min-h-0">
+          {activeTab === "response" && !response && !error && !loading && (
+            <div className="flex flex-col items-center justify-center h-full text-[var(--color-text-muted)] gap-2">
+              <span className="text-2xl opacity-40">⌘</span>
+              <p className="text-xs">Press Send to make a request</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="p-3 rounded-md bg-red-500/5 border border-red-500/10 text-red-400 text-xs">
+              <p className="font-medium mb-1">Error</p>
+              <p className="text-red-400/70">{error}</p>
+              <p className="text-[var(--color-text-muted)] mt-2">May be blocked by CORS. Try the cURL tab.</p>
+            </div>
+          )}
+
+          {currentContent && (
+            <div className="relative group/code">
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
-                  activeTab === tab.id
-                    ? "text-blue-400 bg-slate-800/80 border-b-2 border-blue-400"
-                    : "text-slate-400 hover:text-slate-200"
-                }`}
+                onClick={() => copyToClipboard(currentContent)}
+                className="absolute top-2 right-2 p-1.5 rounded-md bg-[var(--color-surface-hover)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors opacity-0 group-hover/code:opacity-100"
               >
-                {tab.label}
+                {copied ? (
+                  <svg className="w-3.5 h-3.5 text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                )}
               </button>
-            ))}
-            {responseTime > 0 && activeTab === "response" && (
-              <span className="ml-auto text-xs text-slate-500">{responseTime}ms</span>
-            )}
-          </div>
-
-          <div className="flex-1 overflow-auto p-5">
-            {activeTab === "response" && !response && !error && !loading && (
-              <div className="flex flex-col items-center justify-center h-full text-slate-500">
-                <span className="text-4xl mb-3">📡</span>
-                <p className="text-sm">Send Request 버튼을 눌러보세요</p>
-              </div>
-            )}
-
-            {error && (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
-                <p className="font-semibold mb-1">❌ Error</p>
-                <p className="text-sm">{error}</p>
-                <p className="text-xs text-slate-500 mt-2">CORS 정책으로 차단될 수 있습니다. cURL 탭에서 직접 테스트해보세요.</p>
-              </div>
-            )}
-
-            {response && activeTab === "response" && (
-              <div className="relative">
-                <button
-                  onClick={() => copyToClipboard(response)}
-                  className="absolute top-3 right-3 p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors z-10"
-                >
-                  {copied ? <span className="text-xs text-green-400">✓ Copied</span> : (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  )}
-                </button>
-                <pre className="p-4 rounded-xl bg-slate-800/80 text-sm text-slate-200 overflow-x-auto font-mono leading-relaxed">
-                  {response}
+              {activeTab === "response" && response ? (
+                <pre
+                  className="p-4 rounded-md bg-[var(--color-surface)] text-[var(--color-text)] overflow-x-auto leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: highlightJson(currentContent) }}
+                />
+              ) : (
+                <pre className="p-4 rounded-md bg-[var(--color-surface)] text-[var(--color-text-muted)] overflow-x-auto leading-relaxed">
+                  {currentContent}
                 </pre>
-              </div>
-            )}
-
-            {(activeTab === "curl" || activeTab === "fetch" || activeTab === "python") && (
-              <div className="relative">
-                <button
-                  onClick={() => copyToClipboard(getSnippet())}
-                  className="absolute top-3 right-3 p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors z-10"
-                >
-                  {copied ? <span className="text-xs text-green-400">✓ Copied</span> : (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  )}
-                </button>
-                <pre className="p-4 rounded-xl bg-slate-800/80 text-sm text-slate-200 overflow-x-auto font-mono leading-relaxed">
-                  {getSnippet()}
-                </pre>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

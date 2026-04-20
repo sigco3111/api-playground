@@ -25,43 +25,36 @@ export default function Home() {
     <>
       <Header searchQuery={searchQuery} onSearch={setSearchQuery} totalApis={getApiCount()} />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6">
-        {/* Hero - Daily Random API */}
+      <main className="flex-1 max-w-5xl mx-auto w-full px-5 py-6 space-y-5">
         <DailyRandom onSelect={setSelectedApi} />
 
-        {/* Stats bar */}
         <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-400">
-            {searchQuery ? (
-              <>🔍 &quot;{searchQuery}&quot; 검색 결과: <span className="text-white font-semibold">{filteredApis.length}</span>개</>
-            ) : (
-              <>{filteredApis.length}개의 API</>
-            )}
+          <p className="text-xs text-[var(--color-text-muted)] font-mono">
+            {searchQuery
+              ? <>{filteredApis.length} results for &quot;{searchQuery}&quot;</>
+              : <>{filteredApis.length} APIs</>
+            }
           </p>
         </div>
 
-        {/* Category Grid */}
         <CategoryGrid active={activeCategory} onChange={setActiveCategory} />
 
-        {/* API Grid */}
         {filteredApis.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in" key={activeCategory + searchQuery}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 animate-fade-up" key={activeCategory + searchQuery}>
             {filteredApis.map((api) => (
               <ApiCard key={api.id} api={api} onSelect={setSelectedApi} />
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-slate-500">
-            <span className="text-5xl mb-4">🔍</span>
-            <p className="text-lg font-medium">결과가 없습니다</p>
-            <p className="text-sm mt-1">다른 검색어나 카테고리를 시도해보세요</p>
+          <div className="flex flex-col items-center justify-center py-24 text-[var(--color-text-muted)]">
+            <p className="text-sm">No results found</p>
+            <p className="text-xs mt-1 opacity-60">Try a different search or category</p>
           </div>
         )}
       </main>
 
       <Footer />
 
-      {/* API Detail Modal */}
       {selectedApi && (
         <ApiDetail api={selectedApi} onClose={() => setSelectedApi(null)} />
       )}

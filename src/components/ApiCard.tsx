@@ -1,7 +1,6 @@
 "use client";
 
-import { ApiItem } from "@/data/apis";
-import { getCategoryById } from "@/data/apis";
+import { ApiItem, getCategoryById } from "@/data/apis";
 
 interface ApiCardProps {
   api: ApiItem;
@@ -14,25 +13,25 @@ export default function ApiCard({ api, onSelect }: ApiCardProps) {
   return (
     <button
       onClick={() => onSelect(api)}
-      className="w-full text-left p-4 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-slate-600 hover:bg-slate-800/80 transition-all duration-200 group"
+      className="w-full text-left px-4 py-3.5 rounded-lg border border-[var(--color-border-light)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] hover:border-[var(--color-border)] transition-all duration-150 group"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-base">{cat?.icon}</span>
-            <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors truncate">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs">{cat?.icon}</span>
+            <span className="text-sm font-medium text-[var(--color-text)] group-hover:text-white truncate">
               {api.name}
-            </h3>
+            </span>
           </div>
-          <p className="text-sm text-slate-400 mb-2">{api.description}</p>
-          <p className="text-xs text-slate-500 font-mono truncate">{api.endpoint}</p>
+          <p className="text-xs text-[var(--color-text-muted)] truncate">{api.description}</p>
         </div>
-        <span
-          className={`
-            shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider
-            ${api.method === "GET" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" : "bg-blue-500/15 text-blue-400 border border-blue-500/20"}
-          `}
-        >
+        <span className={`
+          shrink-0 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider
+          ${api.method === "GET"
+            ? "text-[var(--color-accent)] bg-[var(--color-accent-dim)]"
+            : "text-[var(--color-warn)] bg-[var(--color-warn-dim)]"
+          }
+        `}>
           {api.method}
         </span>
       </div>
