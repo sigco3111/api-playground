@@ -1,6 +1,6 @@
 # 📡 API Playground
 
-> 실시간 공개 API 실험실 — 무료 공개 API 100+를 한 곳에서 테스트하세요.
+> 실시간 공개 API 실험실 — 무료 공개 API 90+를 한 곳에서 테스트하세요.
 
 API 키 없이, 백엔드 없이, 완전 무료로 동작하는 오픈소스 API 플레이그라운드입니다. 고양이 사진부터 날씨, 우주 사진, 환율, 코인 시세까지 — 다양한 공개 API를 브라우저에서 직접 호출하고 응답을 확인할 수 있습니다.
 
@@ -8,8 +8,8 @@ API 키 없이, 백엔드 없이, 완전 무료로 동작하는 오픈소스 API
 
 | 기능 | 설명 |
 |------|------|
-| **100+ 무료 API** | API 키 없이 브라우저에서 바로 호출 가능한 공개 API |
-| **29개 카테고리** | Animals, Space, Crypto, Finance, Weather 등 |
+| **90+ 무료 API** | API 키 없이 브라우저에서 바로 호출 가능한 공개 API |
+| **27개 카테고리** | Animals, Space, Crypto, Finance, Weather 등 |
 | **실시간 호출** | Send 버튼 하나로 API 요청 후 응답 즉시 확인 |
 | **JSON 하이라이팅** | key / string / number / boolean 색상 구분 |
 | **코드 스니펫** | cURL, JavaScript Fetch, Python 자동 생성 + 1클릭 복사 |
@@ -27,17 +27,17 @@ API 키 없이, 백엔드 없이, 완전 무료로 동작하는 오픈소스 API
 
 | 카테고리 | 예시 API | 엔드포인트 |
 |----------|---------|-----------|
-| 🐾 Animals | Cat Facts, Random Dog, Shiba Inu, Fox, Duck | `catfact.ninja`, `dog.ceo`, `randomfox.ca` |
+| 🐾 Animals | Cat Facts, Random Dog, Random Fox, Random Duck, Bored API | `catfact.ninja`, `dog.ceo`, `randomfox.ca`, `random-d.uk` |
 | 🎬 Entertainment | Star Wars, Rick & Morty, Pokémon, Trivia | `swapi.dev`, `pokeapi.co`, `opentdb.com` |
 | 🍕 Food & Drink | Random Cocktail, Random Meal, Open Food Facts | `thecocktaildb.com`, `themealdb.com` |
-| 🎮 Games | Rock Paper Scissors, Random Word | `rpsls.studentukrato.ru` |
-| 🌍 Geography | All Countries, IP Geolocation, Universities | `restcountries.com`, `ipapi.co` |
-| 📜 History | Today in History, Public Holidays | `history.muffinlabs.com`, `date.nager.at` |
-| 🔢 Math | Math Facts, Pi Digits, Number Trivia | `numbersapi.com`, `api.pi.delivery` |
-| 🎵 Music | iTunes Search, Song Lyrics | `itunes.apple.com`, `api.lyrics.ovh` |
+| 🎮 Games | Rock Paper Scissors, Random Word, Hangman | `rpsls.studentukrato.ru` |
+| 🌍 Geography | All Countries, Random Country, Universities | `restcountries.com`, `ipapi.co`, `hipolabs.com` |
+| 📜 History | Today in History, Random History, Public Holidays | `history.muffinlabs.com`, `date.nager.at` |
+| 🔢 Math | Pi Digits | `api.pi.delivery` |
+| 🎵 Music | iTunes Search, Song Lyrics, MusicBrainz | `itunes.apple.com`, `api.lyrics.ovh` |
 | 📰 News | Hacker News, Wikipedia | `hacker-news.firebaseio.com`, `wikipedia.org` |
 | 🔬 Science | Weather, Air Quality, Name Prediction | `open-meteo.com`, `genderize.io`, `agify.io` |
-| 🚀 Space | NASA APOD, ISS Location, People in Space | `api.nasa.gov`, `open-notify.org` |
+| 🚀 Space | NASA APOD, Mars Rover Photos, ISS Location, People in Space | `api.nasa.gov`, `open-notify.org` |
 | ⚽ Sports | F1 Driver Standings, Race Schedule | `ergast.com` |
 | 💻 Tech | GitHub Search, NPM, HTTPBin | `api.github.com`, `httpbin.org` |
 | ⛅ Weather | Current Weather, 7-Day Forecast, Marine | `open-meteo.com` |
@@ -46,11 +46,10 @@ API 키 없이, 백엔드 없이, 완전 무료로 동작하는 오픈소스 API
 | 📚 Books | Project Gutenberg, Open Library | `gutendex.com`, `openlibrary.org` |
 | 🏳️ Countries | Flags, Population, Currency | `restcountries.com` |
 | ₿ Crypto | Bitcoin Price, Trending Coins, Markets | `api.coingecko.com` |
-| 📅 Dates & Time | World Time, Time Zones | `worldtimeapi.org` |
 | 💰 Finance | Exchange Rate, Currency Convert | `exchangerate-api.com` |
 | 😂 Jokes & Fun | Dad Jokes, Chuck Norris, Programming Jokes | `icanhazdadjoke.com`, `chucknorris.io` |
 | 💬 Quotes | Random Quote, Ron Swanson, Kanye | `dummyjson.com`, `kanye.rest` |
-| 📝 Text & Language | Translation, Lorem Ipsum | `mymemory.translated.net` |
+| 📝 Text & Language | Translation, Lorem Ipsum | `mymemory.translated.net`, `baconipsum.com` |
 | 🚗 Transport | Flight Data (OpenSky) | `opensky-network.org` |
 | 👤 User Agent | User-Agent Check, Request Headers | `httpbin.org` |
 | 🎲 Numbers | Random Number | `random.org` |
@@ -113,7 +112,7 @@ Next.js 정적 export도 지원합니다:
 ```bash
 # next.config.ts에 output: 'export' 추가 후
 npx next build
-# out/ 디렉토리를任意 정적 호스팅 서비스에 배포
+# out/ 디렉토리를 정적 호스팅 서비스에 배포
 ```
 
 ## 📁 프로젝트 구조
@@ -132,7 +131,7 @@ src/
 │   ├── ApiDetail.tsx        # API 상세 모달 (호출, 응답, 코드 스니펫)
 │   └── Footer.tsx           # 푸터
 └── data/
-    └── apis.ts              # API 데이터 (100+ 엔트리, 카테고리, 헬퍼 함수)
+    └── apis.ts              # API 데이터 (90+ 엔트리, 카테고리, 헬퍼 함수)
 ```
 
 ## 🔧 API 추가 방법
@@ -176,10 +175,10 @@ MIT License © 2025
 
 이 프로젝트는 다음 무료 공개 API 서비스들을 활용합니다:
 
-- [catfact.ninja](https://catfact.ninja/) · [dog.ceo](https://dog.ceo/) · [randomfox.ca](https://randomfox.ca/)
+- [catfact.ninja](https://catfact.ninja/) · [dog.ceo](https://dog.ceo/) · [randomfox.ca](https://randomfox.ca/) · [random-d.uk](https://random-d.uk/)
 - [swapi.dev](https://swapi.dev/) · [pokeapi.co](https://pokeapi.co/) · [rickandmortyapi.com](https://rickandmortyapi.com/)
-- [restcountries.com](https://restcountries.com/) · [numbersapi.com](https://numbersapi.com/)
+- [restcountries.com](https://restcountries.com/) · [history.muffinlabs.com](https://history.muffinlabs.com/)
 - [open-meteo.com](https://open-meteo.com/) · [api.nasa.gov](https://api.nasa.gov/)
 - [coingecko.com](https://www.coingecko.com/) · [exchangerate-api.com](https://www.exchangerate-api.com/)
 - [icanhazdadjoke.com](https://icanhazdadjoke.com/) · [chucknorris.io](https://api.chucknorris.io/)
-- [httpbin.org](https://httpbin.org/) · 그 외 다수
+- [baconipsum.com](https://baconipsum.com/) · [httpbin.org](https://httpbin.org/) · 그 외 다수
