@@ -21,7 +21,11 @@ API 키 없이, 백엔드 없이, 완전 무료로 동작하는 오픈소스 API
 
 ## 🚀 데모
 
-**Live:** [https://api-playground-five.vercel.app](https://api-playground-five.vercel.app)
+라이브 데모 : https://sigco3111.github.io/api-playground/
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub%20Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white)](https://sigco3111.github.io/api-playground/)
+
+> 📦 **호스팅 메모**: Next.js 16 정적 export(`output: 'export'`)로 GitHub Pages에 배포됩니다. API routes 없음(클라이언트 측 fetch만 사용).
 
 ## 📋 지원 API 카테고리
 
@@ -60,7 +64,7 @@ API 키 없이, 백엔드 없이, 완전 무료로 동작하는 오픈소스 API
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
 - **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
 - **Runtime:** React 19
-- **Hosting:** [Vercel](https://vercel.com/)
+- **Hosting:** GitHub Pages (Vercel → Pages 전환 2026-08)
 - **API Keys:** **없음** — 모든 API가 프론트엔드에서 직접 호출
 
 ## 📦 설치 & 실행
@@ -95,12 +99,16 @@ npm start
 
 ## 🌐 배포
 
-### Vercel (권장)
+### GitHub Pages (현재)
 
-GitHub 레포지토리를 Vercel에 연결하면 자동으로 배포됩니다. 별도 설정이 필요 없습니다.
+`gh-pages` 브랜치에 정적 export 결과물(`out/`)이 자동 푸시되어 GitHub Pages에서 서빙됩니다. `next.config.ts`에 `basePath: '/api-playground'` + `output: 'export'` 설정.
+
+### Vercel (대안, 정직함 보존 차원 유지)
+
+과거에는 Vercel에 배포되었으며, 현재는 GitHub Pages로 전환되었습니다. CLI 명령은 정직함 차원에서 그대로 유지합니다.
 
 ```bash
-# Vercel CLI로 직접 배포
+# Vercel CLI로 직접 배포 (선택사항)
 npm i -g vercel
 vercel --prod
 ```
